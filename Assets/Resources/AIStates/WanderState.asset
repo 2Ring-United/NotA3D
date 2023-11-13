@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e5948541acea57d46bea6677946404f7, type: 3}
-  m_Name: WanderState]
+  m_Name: WanderState
   m_EditorClassIdentifier: 
   animationName: 0
   StateWeight: 3
   idleAnimation: 0
-  startDistance: 5
-  maxDistance: 10
+  walkAniamtion: 1
+  startDistance: 10
+  maxDistance: 20
   idleTime: 3

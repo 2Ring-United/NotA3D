@@ -15,10 +15,7 @@ public class WanderState : AIState
 
     public override void StartState(AIController controller)
     {
-        if (!controller.animator.GetNextAnimatorStateInfo(0).IsName(walkAniamtion.ToString()))
-        {
-            controller.animator.CrossFade(idleAnimation.ToString(), 0.1f);
-        }
+       
         // Set the initial destination to the current position
         SetRandomDestination(controller);
         controller.SetLastPosition();
@@ -27,8 +24,7 @@ public class WanderState : AIState
     public override void UpdateState(AIController controller)
     {
         if (controller.IsIdle())
-        {
-
+        {      
             if (controller.IdleTimer >= idleTime)
             {
                 // Idle time is over, set new random destination
@@ -42,7 +38,7 @@ public class WanderState : AIState
             // Check if the character has reached the current destination
             if (!controller.GetNavMeshAgent().pathPending && controller.GetNavMeshAgent().remainingDistance <= controller.GetNavMeshAgent().stoppingDistance)
             {
-                if (!controller.GetNavMeshAgent().hasPath || controller.GetNavMeshAgent().velocity.sqrMagnitude <= 0.5f)
+                if (!controller.GetNavMeshAgent().hasPath || controller.GetNavMeshAgent().velocity.sqrMagnitude <= 0.2f)
                 {
                     // AIController has arrived at the destination and stopped moving
                     controller.IdleTimer = 0f;
@@ -53,10 +49,11 @@ public class WanderState : AIState
                     }
                 }
             }
-            else if (controller.GetNavMeshAgent().velocity.magnitude < 0.1f)
+            /*
+            else if (controller.GetNavMeshAgent().velocity.sqrMagnitude < 0.1f)
             {
                 // Check if the agent's position has changed significantly since the last check
-                if (Vector3.Distance(controller.GetNavMeshAgent().transform.position, controller.GetLastPosition()) < 0.1f)
+                if (Vector3.Distance(controller.GetNavMeshAgent().transform.position, controller.GetLastPosition()) < 0.01f)
                 {
                     Debug.Log("NavMeshAgent is stuck!");
                     controller.IdleTimer = 0f;
@@ -67,7 +64,7 @@ public class WanderState : AIState
                 }
 
 
-            }
+            }*/
             controller.SetLastPosition();
         }
     }
@@ -85,15 +82,25 @@ public class WanderState : AIState
 
         // Find the nearest point on the NavMesh to the random position
         NavMeshHit hit;
+        Vector3 dir;
         if (NavMesh.SamplePosition(randomPosition, out hit, maxDistance, NavMesh.AllAreas))
         {
+            dir = (hit.position - controller.GetLastPosition()).normalized;
+            if(dir.x < 0)
+            {
+                controller.FlipCharacterToLeft();
+            }
+            else
+            {
+                controller.FlipCharacterToRight();
+            }
             controller.IdleTimer = 0f;
             controller.SetIsIdle(false);
             controller.GetNavMeshAgent().SetDestination(hit.position);
         }
-        if (!controller.animator.GetNextAnimatorStateInfo(0).IsName(animationName.ToString()))
+        if (!controller.animator.GetNextAnimatorStateInfo(0).IsName(walkAniamtion.ToString()))
         {
-            controller.animator.CrossFade(animationName.ToString(), 0.1f);
+            controller.animator.CrossFade(walkAniamtion.ToString(), 0.1f);
         }
     }
 

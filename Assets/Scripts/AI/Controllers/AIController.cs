@@ -8,6 +8,7 @@ public class AIController : MonoBehaviour
     [SerializeField] AIState[] aIStates;
 
     [Header("Character Stats")]
+    public float StoppingDistance = 0.5f;
     public float WalkSpeed;
     public float RunSpeed;
     public float Damage;
@@ -36,15 +37,14 @@ public class AIController : MonoBehaviour
         navMeshAgent = GetComponent<NavMeshAgent>();
         initialPosition = transform.position;
         lastPosition = initialPosition;
+        navMeshAgent.speed = WalkSpeed;
+        navMeshAgent.stoppingDistance = StoppingDistance;
         ChangeState();
     }
 
     virtual protected void Start()
     {
-        if (!animator.GetNextAnimatorStateInfo(0).IsName(AnimationNames.WALK.ToString()))
-        {
-            animator.CrossFade(AnimationNames.WALK.ToString(), 0.1f);
-        }
+
     }
 
     virtual protected void Update()
@@ -167,5 +167,13 @@ public class AIController : MonoBehaviour
         return AttackTimer > AttackSpeed;
     }
  
+    public void FlipCharacterToLeft()
+    {
+        transform.localScale = new Vector3(-1, 1, 1 );
+    }
+    public void FlipCharacterToRight()
+    {
+        transform.localScale = new Vector3(1, 1, 1);
+    }
 
 }
