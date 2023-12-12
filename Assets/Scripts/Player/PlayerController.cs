@@ -1,41 +1,53 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
-/*Notatki 19.11.2023 Poczytaj ile hp ma tracic przy kolizji z bosem*/
+
 public class PlayerController : MonoBehaviour
 {
-    public short PlayerHealth = 6;
-    public float PlayerSpeed = 5.0f;
 
-    private CharacterController _CharacterController;
+    [HideInInspector] public PlayerInventory Inventory;
+    public int MaxHealth = 10;
+    [HideInInspector] public int currentHealth = 6;
+    public float Speed = 5.0f;
+
+    private int _defaultMaxHealth;
+    private CharacterController _characterController;
 
     Vector3 move;
 
+    private void Awake()
+    {
+        _characterController = GetComponent<CharacterController>();
+        Inventory = GetComponent<PlayerInventory>();
+        _defaultMaxHealth = MaxHealth;
+
+    }
+
     void Start()
     {
-        _CharacterController = GetComponent<CharacterController>();
+
     }
 
 
     void Update()
     {
-        move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")); //Poruszanie postaci na WSAD i strzalki
-        _CharacterController.Move(move * Time.deltaTime * PlayerSpeed);
+        move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        _characterController.Move(move * Time.deltaTime * Speed);
 
-        //Enemy musi miec komponent Collider, oraz Maske NormalEnemy,   //Promien 1f                            //Pierwszy, najblizszy enemy; brak kolizji = zwraca null
-       Collider enemyCollider = Physics.OverlapSphere(transform.position, 1f, LayerMask.GetMask("NormalEnemy")).FirstOrDefault();
-
-        if (enemyCollider != null)
-        {
-            TakeDamage(1);
-        }
     }
 
-    public short UseWeapon<T, M>(T weapon, M targetedEnemy) //Przekazanie dowolnej klasy, bo nie ma jeszcze klasy weapon; zwraca 1 przy uderzeniu i 0 przy missnieciu
+
+    
+
+    public short UseWeapon<T, M>(T weapon, M targetedEnemy) 
     {
-        if( weapon == null ) { Debug.Log("Weapon is null!"); return -10; }
+        if( weapon == null ) 
+        { 
+            Debug.Log("Weapon is null!"); return -10; 
+        }
 
         /* if(targetedEnemy.gotHit)
          {
@@ -51,17 +63,17 @@ public class PlayerController : MonoBehaviour
         return 0;
     }
 
-    public void TakeDamage(short damage)
+    public void TakeDamage(int damage)
     {
-        this.PlayerHealth -= damage;
+        currentHealth -= damage;
 
-        if(this.PlayerHealth <= 0)
+        if(currentHealth <= 0)
             PlayerDeath();
     }
 
     public void PlayerDeath()
     {
-        //Resetowanie Postaci do jej miejsca etc..
+
         Destroy(this);
         Debug.Log("U died");
     }
