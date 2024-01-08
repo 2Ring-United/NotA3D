@@ -8,6 +8,7 @@ public class AIController : MonoBehaviour
     [SerializeField] AIState[] aIStates;
 
     [Header("Character Stats")]
+    public float Health = 10;
     public float StoppingDistance = 0.5f;
     public float WalkSpeed;
     public float RunSpeed;
@@ -123,6 +124,20 @@ public class AIController : MonoBehaviour
         return null; // Return null if no state is found
 
 
+    }
+
+    public void TakeDamage(float value)
+    {
+        Health -= value;
+        if(Health <= 0)
+        {
+            Invoke("OnDeath", 0.5f);
+        }
+    }
+
+    public void OnDeath()
+    {
+        Destroy(gameObject);
     }
     public AIState GetPreviousState()
     {

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   sprite: {fileID: 0}
+  P_PickupContainer: {fileID: 4071062594898840320, guid: 3465b78000bc7e240ab1da0e6f24907a, type: 3}
   Damage: 10
   AttackCooldownTime: 1
   KnockbackForce: 0.5
