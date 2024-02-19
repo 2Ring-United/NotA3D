@@ -14,6 +14,8 @@ public class PlayerInventory : MonoBehaviour
 
     [SerializeField] int gold;
 
+    public Weapon CurrentWeapon => weapon;
+
     public void EquipWeapon(Weapon wep)
     {
         weapon = wep;

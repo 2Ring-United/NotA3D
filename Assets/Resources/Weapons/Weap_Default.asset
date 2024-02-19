@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Weap_Default
   m_EditorClassIdentifier: 
   type: 0
-  sprite: {fileID: 0}
+  sprite: {fileID: 8251151428352545762, guid: bd6b73b38db1f9642af4f03e060346fb, type: 3}
+  P_PickupContainer: {fileID: 0}
   Damage: 10
   AttackCooldownTime: 1
   KnockbackForce: 0.5
