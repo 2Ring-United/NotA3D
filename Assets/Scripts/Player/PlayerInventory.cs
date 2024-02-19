@@ -14,6 +14,19 @@ public class PlayerInventory : MonoBehaviour
 
     [SerializeField] int gold;
 
+
+    void Update()
+    {
+        if(activeItem != null)
+        {
+            activeItem.UpdateItem(this);
+        }
+        if (passiveItem != null)
+        {
+            passiveItem.UpdateItem(this);
+        }
+    }
+
     public void EquipWeapon(Weapon wep)
     {
         if (weapon != null)
@@ -70,4 +83,7 @@ public class PlayerInventory : MonoBehaviour
     {
         return passiveItem;
     }
+
+
+
 }
