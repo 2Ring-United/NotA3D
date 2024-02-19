@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-
+using UnityEngine.Events;
 public class AIController : MonoBehaviour
 {
     [SerializeField] AIState[] aIStates;
+
 
     [Header("Character Stats")]
     public float Health = 10;
@@ -131,6 +132,7 @@ public class AIController : MonoBehaviour
         Health -= value;
         if(Health <= 0)
         {
+            EnemySpawnManager.Instance.InvokeEnemyDeathEvent();
             Invoke("OnDeath", 0.5f);
         }
     }
