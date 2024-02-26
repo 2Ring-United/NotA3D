@@ -7,8 +7,6 @@ using UnityEngine;
 using UnityObject = UnityEngine.Object;
 
 
-[CustomPropertyDrawer(typeof(AttackDirectionDict))] // Name of your class (same as above)
-public class AttackDirectionDictDrawer : DictionaryDrawer<AttackDirection, GameObject> { } // chose same types as your dictionar
 
 [HelpURL("https://forum.unity.com/threads/finally-a-serializable-dictionary-for-unity-extracted-from-system-collections-generic.335797/page-2")]
 public abstract class DictionaryDrawer<TK, TV> : PropertyDrawer

@@ -18,6 +18,10 @@ public class PlayerInventory : MonoBehaviour
 
     public void EquipWeapon(Weapon wep)
     {
+        if (weapon != null)
+        {
+            weapon.Drop();
+        }
         weapon = wep;
     }
     public void EquipActiveItem(Item item)
@@ -52,5 +56,20 @@ public class PlayerInventory : MonoBehaviour
         }
         gold -= amount;
         return true;
+    }
+
+    public Weapon GetWeapon()
+    {
+        return weapon;
+    }
+
+    public ActiveItem GetActiveItem()
+    {
+        return activeItem;
+    }
+
+    public PassiveItem GetPassiveItem()
+    {
+        return passiveItem;
     }
 }

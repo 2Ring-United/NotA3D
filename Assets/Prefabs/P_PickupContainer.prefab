@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4733782228639443177}
   - component: {fileID: 2475406074118965833}
   - component: {fileID: 664851484634998747}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: P_PickupContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,13 +27,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7517113259408294309}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 5.13, y: 0.25, z: -0.87}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4071062594898840320
 MonoBehaviour:
@@ -47,8 +47,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d07aa80e50013a84b9b9dd704f6f255e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pickable: {fileID: 0}
-  UpperFloatingLimit: 5
+  pickable: {fileID: 11400000, guid: d0bc3377ca7a91d44bd596002c15184d, type: 2}
+  UpperFloatingLimit: 1
   FloatSpeed: 1
 --- !u!212 &4733782228639443177
 SpriteRenderer:
@@ -117,7 +117,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
