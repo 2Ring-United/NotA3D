@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 963dda0cab77403488efb5e51485564c, type: 3}
   m_Name: Activ_MagicShield
   m_EditorClassIdentifier: 
-  type: 0
-  sprite: {fileID: 0}
-  P_PickupContainer: {fileID: 0}
+  type: 1
+  sprite: {fileID: 881918295882924426, guid: bd6b73b38db1f9642af4f03e060346fb, type: 3}
+  P_PickupContainer: {fileID: 4071062594898840320, guid: 3465b78000bc7e240ab1da0e6f24907a, type: 3}
   InvincibilityTime: 3
   CooldownTimer: 10
