@@ -40,6 +40,7 @@ public class PickupContainer : MonoBehaviour, IInteractable
     public bool Interact()
     {
         pickable.PickUp(GameManager.Instance.PlayerController.Inventory);
+        Destroy(gameObject);
         return true;
     }
 

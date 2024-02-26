@@ -16,9 +16,10 @@ enum LookingDirection
 public class PlayerController : MonoBehaviour
 {
     public int MaxHealth = 10;
-    [HideInInspector] public PlayerInventory Inventory;
-    [HideInInspector] public int currentHealth = 6;
-    [HideInInspector] public int currentArmor = 2;
+     public PlayerInventory Inventory;
+     public PlayerCollision Collision;
+    [HideInInspector] public float currentHealth = 6;
+    [HideInInspector] public float currentArmor = 2;
 
     public float Speed = 5.0f;
     private float attackRadius = 3f;
@@ -35,11 +36,10 @@ public class PlayerController : MonoBehaviour
     {
         _characterController = GetComponent<CharacterController>();
         Inventory = GetComponent<PlayerInventory>();
+        Collision = GetComponentInChildren<PlayerCollision>();
         _defaultMaxHealth = MaxHealth;
 
     }
-
-
 
 
     void Start()
@@ -51,6 +51,15 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (Inventory.GetActiveItem() != null)
+            {
+                Inventory.GetActiveItem().ActivateItem(Inventory);
+            }
+
+        }
+
         move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")).normalized;
 
         _characterController.Move(move * Time.deltaTime * Speed);
@@ -149,7 +158,7 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
 
         if(damage > currentArmor)
