@@ -13,7 +13,7 @@ enum LookingDirection
     West
 }
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDataPersistence
 {
     public int MaxHealth = 10;
     [HideInInspector] public PlayerInventory Inventory;
@@ -31,6 +31,18 @@ public class PlayerController : MonoBehaviour
     Vector3 move;
     LookingDirection lookDirection;
 
+    public void LoadData(GameData gameData)
+    {
+        currentHealth = gameData.PlayerHealth;
+        currentArmor = gameData.PlayerArmor;
+    }
+
+    public void SaveData(GameData gameData)
+    {
+        gameData.PlayerHealth = currentHealth;
+        gameData.PlayerArmor = currentArmor;
+    } 
+
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
@@ -38,9 +50,6 @@ public class PlayerController : MonoBehaviour
         _defaultMaxHealth = MaxHealth;
 
     }
-
-
-
 
     void Start()
     {
