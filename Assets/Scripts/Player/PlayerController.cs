@@ -183,10 +183,10 @@ public class PlayerController : MonoBehaviour
 
         //PlayerAnimator.PlayAnim("ATTACK_ANIM");
         
-        foreach(Collider col in Physics.OverlapSphere(spherePos, attackRadius, layerMask))
+        foreach(Collider col in Physics.OverlapSphere(spherePos, attackRadius, LayerMask.GetMask("Enemy")))
         {
             Debug.Log("AAA");
-            if(TryGetComponent<AIController>(out AIController controller))
+            if(col.gameObject.TryGetComponent<AIController>(out AIController controller))
             {
                 controller.TakeDamage(Inventory.GetWeapon().Damage);
             }
