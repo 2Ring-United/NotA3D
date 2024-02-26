@@ -34,6 +34,8 @@ public class PlayerController : MonoBehaviour
     Vector3 move;
     Vector3 _prevMove;
 
+    Ray _lastAttackRay;
+
     private bool _attackInProgress;
 
     private void Awake()
@@ -52,9 +54,20 @@ public class PlayerController : MonoBehaviour
     IEnumerator attackCoroutine(AttackDirection dir)
     {
         _attackInProgress = true;
-        AttackDirectionToWeaponSlot[dir].gameObject.GetComponent<SpriteRenderer>().sprite = Inventory.CurrentWeapon.sprite;
+        AttackDirectionToWeaponSlot[dir].gameObject.GetComponentInChildren<SpriteRenderer>().sprite = Inventory.CurrentWeapon.sprite;
+        RaycastHit hit;
+        _lastAttackRay = new Ray(AttackDirectionToWeaponSlot[dir].gameObject.transform.position, AttackDirectionToWeaponSlot[dir].gameObject.transform.forward);
+    
+        if (Physics.Raycast(_lastAttackRay, out hit, 1.5f))
+        {
+            if (hit.collider.gameObject.CompareTag("Game.Enemy"))
+            {
+                UseWeapon(Inventory.CurrentWeapon, hit.collider.gameObject);
+            }
+        }
+
         yield return new WaitForSeconds(0.5f);
-        AttackDirectionToWeaponSlot[dir].gameObject.GetComponent<SpriteRenderer>().sprite = null;
+        AttackDirectionToWeaponSlot[dir].gameObject.GetComponentInChildren<SpriteRenderer>().sprite = null;
         _attackInProgress = false;
     }
 
@@ -101,8 +114,13 @@ public class PlayerController : MonoBehaviour
         _characterController.Move(move * Time.deltaTime * Speed);
     }
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(_lastAttackRay);
+    }
 
-    
+
 
     public short UseWeapon<T, M>(T weapon, M targetedEnemy) 
     {
