@@ -6,51 +6,55 @@ using UnityEngine;
 public class PlayerInventory : MonoBehaviour
 {
 
-    [SerializeField] Weapon weapon;
+    [SerializeField] Weapon _weapon;
 
-    [SerializeField] ActiveItem activeItem;
+    [SerializeField] ActiveItem _activeItem;
 
-    [SerializeField] PassiveItem passiveItem;
+    [SerializeField] PassiveItem _passiveItem;
 
     [SerializeField] int gold;
 
+    private void Start()
+    {
+        
+    }
 
     void Update()
     {
-        if(activeItem != null)
+        if(_activeItem != null)
         {
-            activeItem.UpdateItem(this);
+            _activeItem.UpdateItem(this);
         }
-        if (passiveItem != null)
+        if (_passiveItem != null)
         {
-            passiveItem.UpdateItem(this);
+            _passiveItem.UpdateItem(this);
         }
     }
 
     public void EquipWeapon(Weapon wep)
     {
-        if (weapon != null)
+        if (_weapon != null)
         {
-            weapon.Drop();
+            _weapon.Drop();
         }
-        weapon = wep;
+        _weapon = wep;
     }
     public void EquipActiveItem(Item item)
     {
-        if (activeItem != null)
+        if (_activeItem != null)
         {
-            activeItem.Drop();
+            _activeItem.Drop();
         }
-        activeItem = (ActiveItem)item;
+        _activeItem = (ActiveItem)item;
     }
 
     public void EquipPassiveItem(Item item)
     {
-        if (passiveItem != null)
+        if (_passiveItem != null)
         {
-            passiveItem.Drop();
+            _passiveItem.Drop();
         }
-        passiveItem = (PassiveItem)item;
+        _passiveItem = (PassiveItem)item;
     }
 
     public void CollectGold(int amount)
@@ -71,17 +75,17 @@ public class PlayerInventory : MonoBehaviour
 
     public Weapon GetWeapon()
     {
-        return weapon;
+        return _weapon;
     }
 
     public ActiveItem GetActiveItem()
     {
-        return activeItem;
+        return _activeItem;
     }
 
     public PassiveItem GetPassiveItem()
     {
-        return passiveItem;
+        return _passiveItem;
     }
 
 

@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "United/Pickups/Gold")]
-public class Gold : Pickable
+
+[CreateAssetMenu(fileName= "Pickup_", menuName = "United/Pickups/Armor")]
+public class ArmorPickup : Pickable
 {
-    public int amount = 50;
+    public float amount = 1;
     public override void PickUp(PlayerInventory eq)
     {
-        eq.CollectGold(amount);
+        GameManager.Instance.PlayerController.AddArmor(amount);
     }
 
     public override void Drop()

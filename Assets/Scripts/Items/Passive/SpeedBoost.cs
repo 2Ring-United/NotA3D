@@ -22,7 +22,7 @@ public class SpeedBoost : PassiveItem
     }
     public override void Drop()
     {
-        GameManager.Instance.PlayerController.Speed -= speedBoost;
+        GameManager.Instance.PlayerController.Speed = GameManager.Instance.PlayerController.DefaultSpeed;
         PickupContainer spawnedPickup = Instantiate(P_PickupContainer, GameManager.Instance.PlayerController.transform);
         spawnedPickup.pickable = this;
         spawnedPickup.transform.parent = null;

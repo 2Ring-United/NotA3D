@@ -15,20 +15,30 @@ enum LookingDirection
 
 public class PlayerController : MonoBehaviour
 {
+
+    [Header("Components")]
+    [HideInInspector] public PlayerInventory Inventory;
+    [HideInInspector] public PlayerCollision Collision;
+    private CharacterController _characterController;
+
+
+    [Header("PlayerStats")]
     public int MaxHealth = 10;
-     public PlayerInventory Inventory;
-     public PlayerCollision Collision;
+    public float Speed = 5.0f;
+
     [HideInInspector] public float currentHealth = 6;
     [HideInInspector] public float currentArmor = 2;
 
-    public float Speed = 5.0f;
+    [HideInInspector]public float DefaultSpeed;
+    [HideInInspector]public int DefaultMaxHealth;
+
+
+    [Header("Weapon")]
+    bool isUsingActiveWeapon = false;
+    bool canAttack = true;
+    float attackTimer = 0f;
     private float attackRadius = 3f;
-    private int _defaultMaxHealth;
-    private CharacterController _characterController;
-    [HideInInspector] bool isUsingActiveWeapon = false;
-    [HideInInspector] bool canAttack = true;
-    [HideInInspector] float attackCD = 1f;
-    [HideInInspector] float attackTimer = 1f;
+
     Vector3 move;
     LookingDirection lookDirection;
 
@@ -37,20 +47,22 @@ public class PlayerController : MonoBehaviour
         _characterController = GetComponent<CharacterController>();
         Inventory = GetComponent<PlayerInventory>();
         Collision = GetComponentInChildren<PlayerCollision>();
-        _defaultMaxHealth = MaxHealth;
-
+        DefaultMaxHealth = MaxHealth;
+        DefaultSpeed = Speed;  
     }
 
 
     void Start()
     {
-        //change to event OnEquip
-        attackCD = Inventory.GetWeapon().AttackCooldownTime;
+
+
     }
 
 
     void Update()
     {
+
+        //Use Active Weapon
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (Inventory.GetActiveItem() != null)
@@ -68,10 +80,11 @@ public class PlayerController : MonoBehaviour
 
         Vector2 direction = new Vector2(attackHorizontal, attackVertical);
 
+        //Attack
         if (!canAttack)
         {
             attackTimer += Time.deltaTime;
-            if(attackTimer >= attackCD)
+            if(attackTimer >= Inventory.GetWeapon().AttackCooldownTime)
             {
                 canAttack = true;
             }
@@ -99,7 +112,7 @@ public class PlayerController : MonoBehaviour
 
     bool AttackPressed(Vector2 direction)
     {
-        //For meele
+        //For melee
         if (direction.y > 0)
         {
             lookDirection = LookingDirection.North;
@@ -133,8 +146,6 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        Debug.Log("Using weapon");
-
 
         int layerMask = 1 << LayerMask.NameToLayer("Enemy");
         Vector3 spherePos = new Vector3(transform.position.x + offset.x, transform.position.y, transform.position.z+ offset.y);
@@ -158,6 +169,7 @@ public class PlayerController : MonoBehaviour
 
     }
 
+
     public void TakeDamage(float damage)
     {
 
@@ -172,8 +184,9 @@ public class PlayerController : MonoBehaviour
             return;
         }
         currentHealth -= damage;
+        //UI.UpdateHealthState
 
-        if(currentHealth <= 0)
+        if (currentHealth <= 0)
             PlayerDeath();
     }
 
@@ -182,6 +195,22 @@ public class PlayerController : MonoBehaviour
 
         Destroy(this);
         Debug.Log("U died");
+    }
+
+    public void HealPlayer(float amount)
+    {
+        currentHealth += amount;
+        if(currentHealth > MaxHealth) 
+        { 
+            currentHealth = MaxHealth;
+        }
+        //UI.UpdateHealthState
+    }
+
+    public void AddArmor(float amount)
+    {
+        currentArmor += amount;
+        //UI.UpdateHealthState
     }
 
     private void OnDrawGizmosSelected()

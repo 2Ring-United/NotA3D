@@ -1,18 +1,15 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName ="Weap_",menuName = "United/Pickups/Weapon")]
-public class Weapon : Pickable
+
+[CreateAssetMenu(fileName = "Pickup_", menuName = "United/Pickups/Health")]
+public class HealthPickup : Pickable
 {
-    public float Damage = 10f;
-    public float AttackCooldownTime = 1f;
-    public float AttackRange = 1f;
-    public float KnockbackForce = 0.5f;
+    public float amount = 1;
     public override void PickUp(PlayerInventory eq)
     {
-        eq.EquipWeapon(this);
+        GameManager.Instance.PlayerController.HealPlayer(amount);
     }
 
     public override void Drop()
@@ -21,5 +18,4 @@ public class Weapon : Pickable
         spawnedPickup.pickable = this;
         spawnedPickup.transform.parent = null;
     }
-
 }

@@ -1,18 +1,14 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName ="Weap_",menuName = "United/Pickups/Weapon")]
-public class Weapon : Pickable
+[CreateAssetMenu(fileName = "Pickup_", menuName = "United/Pickups/Gold")]
+public class Gold : Pickable
 {
-    public float Damage = 10f;
-    public float AttackCooldownTime = 1f;
-    public float AttackRange = 1f;
-    public float KnockbackForce = 0.5f;
+    public int amount = 50;
     public override void PickUp(PlayerInventory eq)
     {
-        eq.EquipWeapon(this);
+        eq.CollectGold(amount);
     }
 
     public override void Drop()
@@ -21,5 +17,4 @@ public class Weapon : Pickable
         spawnedPickup.pickable = this;
         spawnedPickup.transform.parent = null;
     }
-
 }
