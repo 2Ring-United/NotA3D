@@ -133,12 +133,15 @@ public class AIController : MonoBehaviour
         if(Health <= 0)
         {
             EnemySpawnManager.Instance.InvokeEnemyDeathEvent();
-            Invoke("OnDeath", 0.5f);
+            Invoke("OnDeath", 0.2f);
         }
     }
 
     public void OnDeath()
     {
+        //Spawn particles
+        //Spawn drop
+        //Sound
         Destroy(gameObject);
     }
     public AIState GetPreviousState()

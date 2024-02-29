@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07bf80375a1df9a46a00538aa9535f11, type: 3}
   m_Name: Pickup_Armor
   m_EditorClassIdentifier: 
-  type: 0
+  type: 3
   sprite: {fileID: 0}
-  P_PickupContainer: {fileID: 0}
+  P_PickupContainer: {fileID: 4071062594898840320, guid: 3465b78000bc7e240ab1da0e6f24907a, type: 3}
   amount: 1
