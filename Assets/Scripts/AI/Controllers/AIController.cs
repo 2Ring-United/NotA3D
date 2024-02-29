@@ -17,6 +17,7 @@ public class AIController : MonoBehaviour
     public float AttackRange;
     public float AttackDotRange;
     public float AttackSpeed;
+    public bool isRanged;
     NavMeshAgent navMeshAgent;
     [Header("Animator")]
     public Animator animator;
@@ -46,7 +47,7 @@ public class AIController : MonoBehaviour
 
     virtual protected void Start()
     {
-
+        currentTarget = FindObjectOfType<PlayerController>().transform;
     }
 
     virtual protected void Update()
@@ -54,6 +55,7 @@ public class AIController : MonoBehaviour
 
         IdleTimer += Time.deltaTime;
         AttackTimer += Time.deltaTime;
+        
         if (currentState != null)
         {
             currentState.UpdateState(this);

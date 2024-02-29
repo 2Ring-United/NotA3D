@@ -10,7 +10,7 @@ public class WanderState : AIState
     [SerializeField] AnimationNames walkAniamtion = AnimationNames.WALK;
     [SerializeField] private float startDistance = 5f;
     [SerializeField] private float maxDistance = 10f;
-    [SerializeField] private float idleTime = 5f;
+    [SerializeField] private float idleTime = 5f;   
 
 
     public override void StartState(AIController controller)
@@ -65,8 +65,11 @@ public class WanderState : AIState
 
 
             }*/
+
             controller.SetLastPosition();
         }
+        
+
     }
     public override void ExitState(AIController controller)
     {
@@ -78,7 +81,8 @@ public class WanderState : AIState
     {
         // Generate a random point around the initial position
         Vector3 randomOffset = Random.insideUnitSphere * Random.Range(startDistance, maxDistance);
-        Vector3 randomPosition = controller.GetLastPosition() + randomOffset;
+        Vector3 randomPosition = controller.initialPosition + randomOffset;
+        Debug.Log(randomOffset + " | " + randomPosition);
 
         // Find the nearest point on the NavMesh to the random position
         NavMeshHit hit;
@@ -106,6 +110,6 @@ public class WanderState : AIState
 
     public override bool CanChangeState(AIController controller)
     {
-        return controller.GetTarget() == null;
+        return Vector3.Distance(controller.GetTarget().position, controller.transform.position) > controller.AttackRange;
     }
 }
