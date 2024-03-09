@@ -25,7 +25,7 @@ public abstract class AIState : ScriptableObject
     {
         return true;
     }
-    public virtual bool CanChangeState(AIController controller)
+    public virtual bool CanChangeToState(AIController controller)
     {
         return true;
     }

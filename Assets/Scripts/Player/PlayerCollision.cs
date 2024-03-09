@@ -18,7 +18,7 @@ public class PlayerCollision : MonoBehaviour
     {
         if (collision.collider.CompareTag("Enemy"))
         {
-            float dmg = collision.collider.GetComponent<AIController>().Damage;
+            float dmg = collision.collider.GetComponent<AIController>().characterStats.Damage;
             PlayerController.TakeDamage(dmg);
         }
     }

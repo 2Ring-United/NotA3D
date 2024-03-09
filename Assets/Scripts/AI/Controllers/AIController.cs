@@ -3,51 +3,50 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
+using UnityEngine.Rendering.Universal;
 public class AIController : MonoBehaviour
 {
     [SerializeField] AIState[] aIStates;
 
 
     [Header("Character Stats")]
-    public float Health = 10;
-    public float StoppingDistance = 0.5f;
-    public float WalkSpeed;
-    public float RunSpeed;
-    public float Damage;
-    public float AttackRange;
-    public float AttackDotRange;
-    public float AttackSpeed;
-    public bool isRanged;
-    NavMeshAgent navMeshAgent;
+    public AIStats characterStats;
+    private float _health;
+    NavMeshAgent _navMeshAgent;
     [Header("Animator")]
-    public Animator animator;
+    [SerializeField] Animator _animator;
 
-    AIState previousState;
-    AIState currentState;
-    AIState nextState;
-    Transform currentTarget;
-    Vector3 lastPosition;
+    AIState _previousState;
+    AIState _currentState;
+    AIState _nextState;
 
-    private bool isIdle = false;
-    public float IdleTimer = 0f;
-    public float AttackTimer = 0f;
+    Transform _currentTarget;
+
+    [SerializeField] public  Transform bulletSpawnPoint;
+
+    private bool _isIdle = false;
+    [HideInInspector] public float IdleTimer = 0f;
+    [HideInInspector] public float AttackTimer = 0f;
 
     public Vector3 initialPosition;
+    Vector3 _lastPosition;
 
 
     private void Awake()
     {
-        navMeshAgent = GetComponent<NavMeshAgent>();
+        _health = characterStats.MaxHealth;
+        _navMeshAgent = GetComponent<NavMeshAgent>();
         initialPosition = transform.position;
-        lastPosition = initialPosition;
-        navMeshAgent.speed = WalkSpeed;
-        navMeshAgent.stoppingDistance = StoppingDistance;
-        ChangeState();
+        _lastPosition = initialPosition;
+        _navMeshAgent.speed = characterStats.WalkSpeed;
+        _navMeshAgent.stoppingDistance = characterStats.StoppingDistance;
     }
 
     virtual protected void Start()
     {
-        currentTarget = FindObjectOfType<PlayerController>().transform;
+        _currentTarget = FindObjectOfType<PlayerController>().transform;
+        ChangeState();
+
     }
 
     virtual protected void Update()
@@ -56,37 +55,37 @@ public class AIController : MonoBehaviour
         IdleTimer += Time.deltaTime;
         AttackTimer += Time.deltaTime;
         
-        if (currentState != null)
+        if (_currentState != null)
         {
-            currentState.UpdateState(this);
+            _currentState.UpdateState(this);
             ChangeState();
         }
     }
 
     public void ChangeState()
     {
-        nextState = GetNextState();
+        _nextState = GetNextState();
 
-        if (nextState == null) { return; }
-        if (currentState != null && !currentState.CanExitState(this))
+        if (_nextState == null) { return; }
+        if (_currentState != null && !_currentState.CanExitState(this))
         {
             return;
         }
-        if (nextState == currentState)
+        if (_nextState == _currentState)
         {
             return;
         }
 
-        if (currentState != null)
+        if (_currentState != null)
         {
-            currentState.ExitState(this);
+            _currentState.ExitState(this);
         }
 
-        if (nextState != null && nextState != currentState)
+        if (_nextState != null && _nextState != _currentState)
         {
-            previousState = currentState;
-            nextState.StartState(this);
-            currentState = nextState;
+            _previousState = _currentState;
+            _nextState.StartState(this);
+            _currentState = _nextState;
 
         }
     }
@@ -99,7 +98,7 @@ public class AIController : MonoBehaviour
         // Find the highest state weight
         foreach (var state in aIStates)
         {
-            if (state.CanChangeState(this))
+            if (state.CanChangeToState(this))
             {
                 if (state.StateWeight > highestWeight)
                 {
@@ -111,7 +110,7 @@ public class AIController : MonoBehaviour
         // Collect all states with the highest weight
         foreach (var state in aIStates)
         {
-            if (state.CanChangeState(this) && state.StateWeight == highestWeight)
+            if (state.CanChangeToState(this) && state.StateWeight == highestWeight)
             {
                 states.Add(state);
             }
@@ -131,8 +130,8 @@ public class AIController : MonoBehaviour
 
     public void TakeDamage(float value)
     {
-        Health -= value;
-        if(Health <= 0)
+        _health -= value;
+        if(_health <= 0)
         {
             EnemySpawnManager.Instance.InvokeEnemyDeathEvent();
             Invoke("OnDeath", 0.2f);
@@ -144,49 +143,53 @@ public class AIController : MonoBehaviour
         //Spawn particles
         //Spawn drop
         //Sound
+        //maybe object pooling if needed
         Destroy(gameObject);
     }
     public AIState GetPreviousState()
     {
-        return previousState;
+        return _previousState;
     }
     public AIState GetCurrentState()
     {
-        return currentState;
+        return _currentState;
     }
     public AIState CheckNextState()
     {
-        return nextState;
+        return _nextState;
     }
-
+    public Animator GetAnimator() 
+    {
+        return _animator;
+    }
     public Transform GetTarget()
     {
-        return currentTarget;
+        return _currentTarget;
     }
     public NavMeshAgent GetNavMeshAgent()
     {
-        return navMeshAgent;
+        return _navMeshAgent;
     }
     public bool IsIdle()
     {
-        return isIdle;
+        return _isIdle;
     }
     public void SetIsIdle(bool isIdle)
     {
-        this.isIdle = isIdle;
+        this._isIdle = isIdle;
     }
     public Vector3 GetLastPosition()
     {
-        return lastPosition;
+        return _lastPosition;
     }
     public void SetLastPosition()
     {
-        lastPosition = transform.position;
+        _lastPosition = transform.position;
     }
 
     public bool CanAttack()
     {
-        return AttackTimer > AttackSpeed;
+        return AttackTimer > characterStats.AttackSpeed;
     }
  
     public void FlipCharacterToLeft()
@@ -198,4 +201,26 @@ public class AIController : MonoBehaviour
         transform.localScale = new Vector3(1, 1, 1);
     }
 
+
+    void OnDrawGizmos()
+    {
+        // Display the explosion radius when selected
+        Gizmos.color = Color.yellow; 
+        Vector3 lookingDir = (GetTarget().position - GetLastPosition()).normalized;
+        Vector3 sphereSpawnPoint = Vector3.zero;
+        float disToTarget = Vector3.Distance(transform.position, GetTarget().position);
+        if (disToTarget >= characterStats.AttackRange) 
+        {
+            sphereSpawnPoint = transform.position + lookingDir * characterStats.AttackRange;
+
+        }
+        else
+        {
+            sphereSpawnPoint = transform.position + lookingDir * disToTarget;
+        }
+        sphereSpawnPoint.y = 0.5f;
+        Gizmos.DrawWireSphere(sphereSpawnPoint, characterStats.AttackHitboxSize);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, characterStats.AttackRange);
+    }
 }
