@@ -7,8 +7,9 @@ using UnityEngine.AI;
 [CreateAssetMenu(menuName = ("United/AI/RangedAttackState"))]
 public class RangedAttackState : AIState
 {
-    [SerializeField] private GameObject _P_Bullet;
+    [SerializeField] private GameObject P_EnemyBullet;
     [SerializeField] private float spawnBulletDelay = 1f; // Delay for animation
+    [SerializeField] private float force = 2f;
     Vector3 lookingDir;
     private IEnumerator attack;
 
@@ -60,8 +61,9 @@ public class RangedAttackState : AIState
     {
         yield return new WaitForSeconds(spawnBulletDelay);
 
-        GameObject bullet =  Instantiate(_P_Bullet, controller.bulletSpawnPoint.position, Quaternion.identity);
-        //Apply force inside bullet script
+        EnemyBullet bullet =  Instantiate(P_EnemyBullet, controller.bulletSpawnPoint.position, Quaternion.identity).GetComponent<EnemyBullet>();
+        bullet.SetDamage(controller.characterStats.Damage);
+        bullet.GetComponent<Rigidbody>().AddForceAtPosition(lookingDir * force, bullet.transform.position);
 
         yield return null;
     }
